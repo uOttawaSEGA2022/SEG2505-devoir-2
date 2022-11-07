@@ -83,10 +83,10 @@ public class ServerConsole implements ChatIF {
 	  
 	  private void handleCommands(String cmd) throws IOException {
 		  if(cmd.equals("#quit")) {
-			  
+			  server.close();
 		  }
 		  else if(cmd.equals("#stop")){
-			  
+			  server.stopListening();
 		  }
 	  }
 	  
