@@ -75,7 +75,7 @@ public class EchoServer extends AbstractServer
 		  }
 	  }
 	  else {
-		  serverUI.display("Message received: " + msg + " from " + client);
+		  serverUI.display("Message received: " + msg + " from " + client.getInfo("loginid"));
 		  this.sendToAllClients(client.getInfo("loginid") + message);
 	}
 }
@@ -173,7 +173,7 @@ public class EchoServer extends AbstractServer
   @Override
   protected void clientConnected(ConnectionToClient client) 
   {
-	  serverUI.display("New client connected.");
+	  serverUI.display(client.getInfo("loginid") + " has logged on.");
   }
 
   /**
@@ -187,7 +187,7 @@ public class EchoServer extends AbstractServer
   synchronized protected void clientDisconnected(
     ConnectionToClient client) 
   {
-	  serverUI.display("Client has disconnected.");		
+	  serverUI.display(client.getInfo("loginid") + " has disconnected.");		
   }
 
   

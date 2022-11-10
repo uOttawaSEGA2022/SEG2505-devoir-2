@@ -47,7 +47,7 @@ public class ChatClient extends AbstractClient
     this.clientUI = clientUI;
     this.loginid = loginid;
     openConnection();
-    this.sendToServer("#login" + loginid);
+    this.sendToServer("#login " + loginid);
   }
 
   
@@ -173,7 +173,6 @@ public class ChatClient extends AbstractClient
 	 */
   @Override
 	protected void connectionException(Exception exception) {
-	  exception.printStackTrace();
 	  clientUI.display("The server has shut down.");
 	  System.exit(0);
   }
