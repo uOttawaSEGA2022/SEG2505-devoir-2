@@ -90,6 +90,7 @@ public class ServerConsole implements ChatIF {
 	    }
 	    catch (Exception e) {
 	    	System.out.println("Cannot listen for clients");
+	    	e.printStackTrace();
 	    }
 	    
 	    sv.accept();  //Wait for console data

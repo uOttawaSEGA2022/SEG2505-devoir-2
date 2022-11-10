@@ -65,7 +65,8 @@ public class EchoServer extends AbstractServer
 		  String[] info = message.split(" ");
 		  if(client.getInfo("loginid")!=null) {
 			  try {
-				client.sendToClient("You have already set a username.");
+				client.sendToClient("Error: You have already logged in.");
+				client.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
