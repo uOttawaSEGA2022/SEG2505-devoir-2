@@ -76,7 +76,7 @@ public class EchoServer extends AbstractServer
 	  }
 	  else {
 		  serverUI.display("Message received: " + msg + " from " + client.getInfo("loginid"));
-		  this.sendToAllClients(client.getInfo("loginid") + message);
+		  this.sendToAllClients(client.getInfo("loginid") + " " + message);
 	}
 }
   
