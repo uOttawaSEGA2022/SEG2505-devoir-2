@@ -25,6 +25,14 @@ public class EchoServer extends AbstractServer
    */
   final public static int DEFAULT_PORT = 5555;
   
+  //Instance variables **********************************************
+  
+  /**
+   * The interface type variable.  It allows the implementation of 
+   * the display method in the server.
+   */
+  	ChatIF serverUI; 
+  
   //Constructors ****************************************************
   
   /**
@@ -32,20 +40,13 @@ public class EchoServer extends AbstractServer
    *
    * @param port The port number to connect on.
    */
-  public EchoServer(int port) 
+  public EchoServer(int port, ChatIF serverUI)
   {
     super(port);
+    this.serverUI = serverUI;
   }
   
-  //Instance variables **********************************************
-  
-  /**
-   * The interface type variable.  It allows the implementation of 
-   * the display method in the server.
-   */
-  ChatIF serverUI; 
 
-  
   //Instance methods ************************************************
   
   /**
@@ -59,6 +60,13 @@ public class EchoServer extends AbstractServer
   {
     serverUI.display("Message received: " + msg + " from " + client);
     this.sendToAllClients(msg);
+  }
+  
+  public void handleMessageFromServerConsole
+  (Object msg)
+  {
+	  String message = "SERVER MSG>" + msg;
+	  this.sendToAllClients(message);
   }
     
   /**
@@ -82,42 +90,6 @@ public class EchoServer extends AbstractServer
   }
   
   //Class methods ***************************************************
-  
-  /**
-   * This method is responsible for the creation of 
-   * the server instance (there is no UI in this phase).
-   *
-   * @param args[0] The port number to listen on.  Defaults to 5555 
-   *          if no argument is entered.
-   */
-  public static void main(String[] args) 
-  {
-    int port = 0; //Port to listen on
-
-    try
-    {
-      port = Integer.parseInt(args[0]); //Get port from command line
-    }
-    catch(Throwable t)
-    {
-      port = DEFAULT_PORT; //Set port to 5555
-    }
-	
-    EchoServer sv = new EchoServer(port);
-    
-    try 
-    {
-      sv.listen(); //Start listening for connections
-    } 
-    catch (Exception ex) 
-    {
-      sv.serverUI.display("ERROR - Could not listen for clients!");
-    }
-    
-    ServerConsole adminchat = new ServerConsole(port);
-    adminchat.accept();
-  }
-  
   /**
    * The implementation of the hook method called each time a new client connection is
    * accepted. The default implementation does nothing.
@@ -140,7 +112,7 @@ public class EchoServer extends AbstractServer
   synchronized protected void clientDisconnected(
     ConnectionToClient client) 
   {
-	  serverUI.display("Client disconnected.");
+	  serverUI.display("Client has disconnected.");		
   }
 
   

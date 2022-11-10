@@ -10,6 +10,8 @@ public class ServerConsole implements ChatIF {
 	
 	Scanner fromConsole;
 	
+	final public static int DEFAULT_PORT = 5555;
+	 
 	  //Constructors ****************************************************
 
 	  /**
@@ -20,7 +22,7 @@ public class ServerConsole implements ChatIF {
 	   */
 	  public ServerConsole(int port) 
 	  {
-	    server = new EchoServer(port);
+	    server = new EchoServer(port, this);
 	    // Create scanner object to read from console
 	    fromConsole = new Scanner(System.in); 
 	  }
@@ -41,6 +43,7 @@ public class ServerConsole implements ChatIF {
 	      while (true) 
 	      {
 	        message = fromConsole.nextLine();
+	        server.handleMessageFromServerConsole(message);
 	      }
 	    } 
 	    catch (Exception ex) 
@@ -72,7 +75,11 @@ public class ServerConsole implements ChatIF {
 	    {
 	    	if(message.startsWith("#")){
 	    		handleCommands(message);
-	    	  } else { server.sendToAllClients("SERVER MSG>" + message);}
+	    	  } 
+	    	else 
+	    	  { 
+	    		display(message);
+	    		server.sendToAllClients("SERVER MSG>" + message);}
 	    }
 	    catch(IOException e)
 	    {
@@ -84,7 +91,7 @@ public class ServerConsole implements ChatIF {
 	  private void handleCommands(String cmd) throws IOException {
 		  if(cmd.equals("#quit")) {
 			  server.close();
-			  
+			  //i would guess quit() would also work here
 		  }
 		  else if(cmd.equals("#stop")){
 			  server.stopListening();
@@ -95,6 +102,35 @@ public class ServerConsole implements ChatIF {
 		  }
 	  }
 	  
+	  public static void main(String[] args) 
+	  {
+	    int port = 0;
 
+	    try
+	    {
+	      port = Integer.parseInt(args[1]);
+	    }
+	    catch(ArrayIndexOutOfBoundsException e)
+	    {
+	      port = DEFAULT_PORT;
+	    }
+	    catch(NumberFormatException f) //in case someone types a string for port--cant be converted to int
+	    {
+	      port = DEFAULT_PORT;
+	    }
+	    
+	    ServerConsole sv = new ServerConsole(port);
+	    
+	    try
+	    {
+	    	sv.server.listen();
+	    }
+	    catch (Exception e) {
+	    	System.out.println("Cannot listen for clients");
+	    }
+	    
+	    sv.accept();  //Wait for console data
+	  }
+	  
 }
 //End of ServerConsole class	  
