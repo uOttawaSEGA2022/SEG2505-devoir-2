@@ -60,9 +60,24 @@ public class EchoServer extends AbstractServer
   public void handleMessageFromClient
     (Object msg, ConnectionToClient client)
   {
-    serverUI.display("Message received: " + msg + " from " + client);
-    this.sendToAllClients(msg);
-  }
+	  String message = (String)msg;
+	  if(message.startsWith("#login")) {
+		  String[] info = message.split(" ");
+		  if(client.getInfo("loginid")!=null) {
+			  try {
+				client.sendToClient("You have already set a username.");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		  } else {
+			  client.setInfo("loginid", info[1]);
+		  }
+	  }
+	  else {
+		  serverUI.display("Message received: " + msg + " from " + client);
+		  this.sendToAllClients(client.getInfo("loginid") + message);
+	}
+}
   
   /**
    * This method handles all data coming from the UI            
