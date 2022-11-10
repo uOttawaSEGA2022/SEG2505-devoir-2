@@ -90,15 +90,15 @@ public class EchoServer extends AbstractServer
   
   private void handleCommands(String cmd) throws IOException {
 	  if(cmd.equals("#quit")) {
-		  close();
+		  this.close();
 		  //i would guess quit() would also work here
 	  }
 	  else if(cmd.equals("#stop")){
-		  stopListening();
+		  this.stopListening();
 	  }
 	  else if(cmd.equals("close")) {
-		  stopListening();
-		  close();
+		  this.stopListening();
+		  this.close();
 	  }
 	  else if (cmd.startsWith("#setport")) {
 		  //check if client is disconnected
@@ -111,6 +111,20 @@ public class EchoServer extends AbstractServer
 			  serverUI.display("Port value invalid");
 		  }
 		  
+	  }
+	  else if(cmd.equals("#start")) {
+		  if(!this.isListening()) {
+			  try {
+				  this.listen();
+			  } catch (IOException e) {
+				  serverUI.display("Error occurred listening for clients");
+			  }
+		  } else {
+			  serverUI.display("Already started.");
+		  }
+	  }
+	  else if(cmd.equals("#getport")) {
+		  serverUI.display("Port: " + Integer.toString(this.getPort()));
 	  }
   }
 
