@@ -43,7 +43,7 @@ public class ServerConsole implements ChatIF {
 	      while (true) 
 	      {
 	        message = fromConsole.nextLine();
-	        server.handleMessageFromServerConsole(message);
+	        server.handleMessageFromServerUI(message);
 	      }
 	    } 
 	    catch (Exception ex) 
@@ -64,43 +64,6 @@ public class ServerConsole implements ChatIF {
 	    System.out.println("> " + message);
 	  }
 	  
-	  /**
-	   * This method handles all data coming from the UI            
-	   *
-	   * @param message The message from the UI.    
-	   */
-	  public void handleMessageFromServerUI(String message)
-	  {
-	    try
-	    {
-	    	if(message.startsWith("#")){
-	    		handleCommands(message);
-	    	  } 
-	    	else 
-	    	  { 
-	    		display(message);
-	    		server.sendToAllClients("SERVER MSG>" + message);}
-	    }
-	    catch(IOException e)
-	    {
-	      display
-	        ("Could not send message.");
-	    }
-	  }
-	  
-	  private void handleCommands(String cmd) throws IOException {
-		  if(cmd.equals("#quit")) {
-			  server.close();
-			  //i would guess quit() would also work here
-		  }
-		  else if(cmd.equals("#stop")){
-			  server.stopListening();
-		  }
-		  else if(cmd.equals("close")) {
-			  server.stopListening();
-			  server.close();
-		  }
-	  }
 	  
 	  public static void main(String[] args) 
 	  {
