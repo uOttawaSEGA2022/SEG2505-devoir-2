@@ -3,6 +3,8 @@
 // license found at www.lloseng.com 
 
 
+import java.io.IOException;
+
 import common.ChatIF;
 import ocsf.server.*;
 
@@ -62,13 +64,56 @@ public class EchoServer extends AbstractServer
     this.sendToAllClients(msg);
   }
   
-  public void handleMessageFromServerConsole
-  (Object msg)
+  /**
+   * This method handles all data coming from the UI            
+   *
+   * @param message The message from the UI.    
+   */
+  public void handleMessageFromServerUI(String message)
   {
-	  String message = "SERVER MSG>" + msg;
-	  this.sendToAllClients(message);
+    try
+    {
+    	if(message.startsWith("#")){
+    		handleCommands(message);
+    	  } 
+    	else 
+    	  { 
+    		serverUI.display(message);
+    		sendToAllClients("SERVER MSG>" + message);}
+    }
+    catch(IOException e)
+    {
+      serverUI.display
+        ("Could not send message.");
+    }
   }
-    
+  
+  private void handleCommands(String cmd) throws IOException {
+	  if(cmd.equals("#quit")) {
+		  close();
+		  //i would guess quit() would also work here
+	  }
+	  else if(cmd.equals("#stop")){
+		  stopListening();
+	  }
+	  else if(cmd.equals("close")) {
+		  stopListening();
+		  close();
+	  }
+	  else if (cmd.startsWith("#setport")) {
+		  //check if client is disconnected
+		  //account for exception 
+		  String[] instruction = cmd.split(" ");
+		  try {
+			  this.setPort(Integer.parseInt(instruction[1]));
+		  }
+		  catch (Exception e ) {
+			  serverUI.display("Port value invalid");
+		  }
+		  
+	  }
+  }
+
   /**
    * This method overrides the one in the superclass.  Called
    * when the server starts listening for connections.
